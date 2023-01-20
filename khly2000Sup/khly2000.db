@@ -1,0 +1,109 @@
+record(bo, "$(P)DISABLE"){
+    field(DESC, "Disable comms")
+    field(PINI, "YES")
+    field(VAL, "$(DISABLE=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
+record(bo, "$(P)SIM"){
+    field(DESC, "Simulate")
+    field(PINI, "YES")
+    field(VAL, "$(RECSIM=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
+record(lsi, "$(P)IDN") {
+    field(INP, "@khly2000.proto getIDN $(PORT)")
+	field(SCAN, "10 second")
+	field(DTYP, "stream")
+	field(SIZV, "256")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+}
+
+record(mbbi, "$(P)MODE") {
+    field(INP, "@khly2000.proto getMode $(PORT)")
+	field(SCAN, "1 second")
+	field(DTYP, "stream")
+	
+	field(ZRST, "DC Voltage")
+	field(ONST, "AC Voltage")
+	field(TWST, "DC Current")
+	field(THST, "AC Current")
+	field(FRST, "Resistance (2 wire)")
+	field(FVST, "Resistance (4 wire)")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+}
+
+record(mbbo, "$(P)MODE:SP") {
+    field(OUT, "@khly2000.proto setMode $(PORT)")
+	field(DTYP, "stream")
+	
+	field(ZRST, "DC Voltage")
+	field(ONST, "AC Voltage")
+	field(TWST, "DC Current")
+	field(THST, "AC Current")
+	field(FRST, "Resistance (2 wire)")
+	field(FVST, "Resistance (4 wire)")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+}
+
+record(ai, "$(P)READING") {
+    field(INP, "@khly2000.proto getReading $(PORT)")
+	field(SCAN, "1 second")
+	field(DTYP, "stream")
+	field(PREC, 8)
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:READING")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+}
+
+record(calc, "$(P)VOLT") {
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=0|B=1)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "V")
+	field(PREC, 8)
+}
+
+record(calc, "$(P)CURR") {
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=2|B=3)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "A")
+	field(PREC, 8)
+}
+
+record(calc, "$(P)RES") {
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=4|B=5)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "ohm")
+	field(PREC, 8)
+}
+
+
+### Sim records
+
+record(longout, "$(P)SIM:MODE") {}
+record(ao, "$(P)SIM:READING") {}
+record(lsi, "$(P)SIM:IDN") {}

@@ -1,0 +1,21 @@
+InTerminator = CR LF;
+OutTerminator = CR LF;
+
+getIDN {
+    out "*IDN?";
+    in "%256c";
+}
+
+getMode {
+    out ":CONF?";
+	in "\"%{VOLT:DC|VOLT:AC|CURR:DC|CURR:AC|RES|FRES}\"";
+}
+
+setMode {
+    out ":CONF:%{VOLT:DC|VOLT:AC|CURR:DC|CURR:AC|RES|FRES}";
+}
+
+getReading {
+    out ":READ?";
+	in "%f";
+}
