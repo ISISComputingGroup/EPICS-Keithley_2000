@@ -1,5 +1,11 @@
-InTerminator = CR LF;
-OutTerminator = CR LF;
+# Note: terminators are set in st-common.cmd by asynOctetSetInputEos/asynOctetSetOutputEos
+# as the terminators are configurable on the device
+
+# Device is sometimes very slow to respond after changing modes.
+ReadTimeout = 2000;
+WriteTimeout = 2000;
+ReplyTimeout = 2000;
+LockTimeout = 5000;
 
 getIDN {
     out "*IDN?";
