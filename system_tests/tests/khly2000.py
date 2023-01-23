@@ -73,3 +73,16 @@ class Khly2000Tests(unittest.TestCase):
         self.ca.assert_that_pv_value_causes_func_to_return_true("VOLT", math.isnan)
         self.ca.assert_that_pv_value_causes_func_to_return_true("CURR", math.isnan)
         self.ca.assert_that_pv_is("RES", 70)
+
+    @skip_if_recsim("Testing disconnection not possible in recsim")
+    def test_WHEN_device_disconnected_THEN_all_pvs_in_alarm(self):
+        self.ca.assert_that_pv_alarm_is("IDN", self.ca.Alarms.NONE)
+
+        with self.lewis.backdoor_simulate_disconnected_device():
+            self.ca.assert_that_pv_alarm_is("VOLT", self.ca.Alarms.INVALID)
+            self.ca.assert_that_pv_alarm_is("CURR", self.ca.Alarms.INVALID)
+            self.ca.assert_that_pv_alarm_is("RES", self.ca.Alarms.INVALID)
+            self.ca.assert_that_pv_alarm_is("READING", self.ca.Alarms.INVALID)
+            self.ca.assert_that_pv_alarm_is("IDN", self.ca.Alarms.INVALID)
+
+        self.ca.assert_that_pv_alarm_is("IDN", self.ca.Alarms.NONE)
