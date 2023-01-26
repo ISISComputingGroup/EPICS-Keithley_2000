@@ -1,0 +1,137 @@
+record(bo, "$(P)DISABLE"){
+    field(DESC, "Disable comms")
+    field(PINI, "YES")
+    field(VAL, "$(DISABLE=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
+record(bo, "$(P)SIM"){
+    field(DESC, "Simulate")
+    field(PINI, "YES")
+    field(VAL, "$(RECSIM=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
+record(waveform, "$(P)IDN") {
+    field(DESC, "Device identification string")
+    field(INP, "@khly2000.proto getIDN $(PORT)")
+	field(SCAN, "10 second")
+	field(DTYP, "stream")
+	field(FTVL, "CHAR")
+	field(NELM, "256")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+	
+	info(alarm, "KHLY2000")
+}
+
+record(mbbi, "$(P)MODE") {
+    field(DESC, "Measurement mode")
+    field(INP, "@khly2000.proto getMode $(PORT)")
+	field(SCAN, "1 second")
+	field(DTYP, "stream")
+	
+	field(ZRST, "DC Voltage")
+	field(ONST, "AC Voltage")
+	field(TWST, "DC Current")
+	field(THST, "AC Current")
+	field(FRST, "Resistance (2 wire)")
+	field(FVST, "Resistance (4 wire)")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+	
+	info(interest, "HIGH")
+	info(archive, "VAL")
+}
+
+record(mbbo, "$(P)MODE:SP") {
+    field(DESC, "Measurement mode (setpoint)")
+    field(OUT, "@khly2000.proto setMode $(PORT)")
+	field(DTYP, "stream")
+	
+	field(ZRST, "DC Voltage")
+	field(ONST, "AC Voltage")
+	field(TWST, "DC Current")
+	field(THST, "AC Current")
+	field(FRST, "Resistance (2 wire)")
+	field(FVST, "Resistance (4 wire)")
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:MODE")
+    field(SDIS, "$(P)DISABLE")
+	
+	info(archive, "VAL")
+}
+
+record(ai, "$(P)READING") {
+    field(DESC, "Raw reading from device")
+    field(INP, "@khly2000.proto getReading $(PORT)")
+	field(SCAN, "1 second")
+	field(DTYP, "stream")
+	field(EGU, "")
+	field(PREC, 8)
+	
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:READING")
+    field(SDIS, "$(P)DISABLE")
+	field(SSCN, ".1 second")
+	
+	info(interest, "LOW")
+	info(archive, "VAL")
+}
+
+record(calc, "$(P)VOLT") {
+    field(DESC, "Measured voltage")
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=0|B=1)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "V")
+	field(PREC, 8)
+	
+	info(interest, "HIGH")
+	info(archive, "VAL")
+}
+
+record(calc, "$(P)CURR") {
+    field(DESC, "Measured current")
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=2|B=3)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "A")
+	field(PREC, 8)
+	
+	info(interest, "HIGH")
+	info(archive, "VAL")
+}
+
+record(calc, "$(P)RES") {
+    field(DESC, "Measured resistance")
+    field(INPA, "$(P)READING CP MSS")
+    field(INPB, "$(P)MODE CP MSS")
+	field(CALC, "(B=4|B=5)?A:NaN")
+	field(ASG, "READONLY")
+	field(EGU, "ohm")
+	field(PREC, 8)
+	
+	info(interest, "HIGH")
+	info(archive, "VAL")
+}
+
+
+### Sim records
+
+record(longout, "$(P)SIM:MODE") {}
+record(ao, "$(P)SIM:READING") {}
+record(waveform, "$(P)SIM:IDN") {}
