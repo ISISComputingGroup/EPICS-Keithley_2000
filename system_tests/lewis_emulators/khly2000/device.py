@@ -16,9 +16,8 @@ class MeasurementMode(enum.Enum):
     RES_4WIRE = 5
 
 
-
 @has_log
-class SimulatedB17Tmag(StateMachineDevice):
+class SimulatedKeithley2000(StateMachineDevice):
 
     def _initialize_data(self):
         self.re_initialise()
