@@ -32,10 +32,6 @@ class SimulatedKeithley2000(StateMachineDevice):
         return OrderedDict([])
 
     def re_initialise(self):
-        """
-        Setting values device is initially set with when it is first turned on
-        Values are set based on those set in the manual for Birmingham 17T magnet.
-        """
         self.connected = True
         self.idn = "Simulated keithley 2000"
         self.mode = MeasurementMode.VOLT_DC
