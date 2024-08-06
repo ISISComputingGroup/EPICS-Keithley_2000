@@ -24,7 +24,7 @@ class Khly2000StreamInterface(StreamInterface):
         CmdBuilder("getMode").escape(":CONF?").eos().build(),
         CmdBuilder("setMode").escape(":CONF:").string().eos().build(),
     }
-    
+
     in_terminator = "\r\n"
     out_terminator = "\r\n"
 

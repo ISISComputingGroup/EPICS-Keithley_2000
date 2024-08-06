@@ -38,10 +38,11 @@ MEASUREMENT_MODES = [
 
 
 class Khly2000Tests(unittest.TestCase):
-
     def setUp(self):
         self.lewis, self.ioc = get_running_lewis_and_ioc(EMULATOR_DEVICE, DEVICE_PREFIX)
-        self.ca = ChannelAccess(default_timeout=15, default_wait_time=0.0, device_prefix=DEVICE_PREFIX)
+        self.ca = ChannelAccess(
+            default_timeout=15, default_wait_time=0.0, device_prefix=DEVICE_PREFIX
+        )
         self.ca.assert_that_pv_exists("DISABLE", timeout=30)
 
     @skip_if_recsim("IDN not implemented in recsim")
