@@ -1,12 +1,15 @@
 import math
 import unittest
 
-from utils.test_modes import TestModes
+from parameterized import parameterized
 from utils.channel_access import ChannelAccess
 from utils.ioc_launcher import get_default_ioc_dir
-from utils.testing import get_running_lewis_and_ioc, assert_log_messages, skip_if_recsim, unstable_test, parameterized_list
-from parameterized import parameterized
-
+from utils.test_modes import TestModes
+from utils.testing import (
+    get_running_lewis_and_ioc,
+    parameterized_list,
+    skip_if_recsim,
+)
 
 DEVICE_PREFIX = "KHLY2000_01"
 
@@ -35,10 +38,11 @@ MEASUREMENT_MODES = [
 
 
 class Khly2000Tests(unittest.TestCase):
-
     def setUp(self):
         self.lewis, self.ioc = get_running_lewis_and_ioc(EMULATOR_DEVICE, DEVICE_PREFIX)
-        self.ca = ChannelAccess(default_timeout=15, default_wait_time=0.0, device_prefix=DEVICE_PREFIX)
+        self.ca = ChannelAccess(
+            default_timeout=15, default_wait_time=0.0, device_prefix=DEVICE_PREFIX
+        )
         self.ca.assert_that_pv_exists("DISABLE", timeout=30)
 
     @skip_if_recsim("IDN not implemented in recsim")

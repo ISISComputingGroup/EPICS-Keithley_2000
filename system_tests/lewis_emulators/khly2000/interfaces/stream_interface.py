@@ -1,9 +1,9 @@
-from lewis.adapters.stream import StreamInterface, Cmd
-from lewis.utils.command_builder import CmdBuilder
+from lewis.adapters.stream import StreamInterface
 from lewis.core.logging import has_log
+from lewis.utils.command_builder import CmdBuilder
 from lewis.utils.replies import conditional_reply
-from ..device import MeasurementMode
 
+from ..device import MeasurementMode
 
 MODE_TO_STR = {
     "VOLT:DC": MeasurementMode.VOLT_DC,
@@ -24,7 +24,7 @@ class Khly2000StreamInterface(StreamInterface):
         CmdBuilder("getMode").escape(":CONF?").eos().build(),
         CmdBuilder("setMode").escape(":CONF:").string().eos().build(),
     }
-    
+
     in_terminator = "\r\n"
     out_terminator = "\r\n"
 
